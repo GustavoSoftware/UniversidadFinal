@@ -1,12 +1,5 @@
-
 import { pool } from "../database"; 
 
-// ... (Todo el resto de tu código de getAll, getById, etc.)
-
-/**
- * Mapeo automático de nombres de tablas a sus llaves primarias.
- * Esto evita errores al llamar a getById, update o delete.
- */
 const obtenerIdCampo = (tabla: string): string => {
     const mapeo: { [key: string]: string } = {
         'carreras': 'id_carrera',
@@ -23,7 +16,6 @@ const obtenerIdCampo = (tabla: string): string => {
 
 // 1. Obtener todos los registros
 export const getAll = async (tabla: string) => {
-    // Corregido: En tu SQL pusimos 'fecha_creacion', no 'id_creacion'
     const query = `SELECT * FROM ${tabla} WHERE estado_auditoria = 'ACTIVO' ORDER BY fecha_creacion DESC`;
     const res = await pool.query(query);
     return res.rows;
