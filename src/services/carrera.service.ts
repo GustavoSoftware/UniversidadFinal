@@ -1,5 +1,6 @@
 import { pool } from "../database";
 import { Carrera } from "../models/universidad.model";
+import { mapAuditoria } from "../utils/mapAuditoria";
 
 export const getAllCarreras = async (): Promise<Carrera[]> => {
   const query = `
@@ -9,7 +10,7 @@ export const getAllCarreras = async (): Promise<Carrera[]> => {
     ORDER BY fecha_creacion DESC
   `;
   const res = await pool.query(query);
-  return res.rows;
+  return res.rows.map(mapAuditoria);
 };
 
 export const getCarreraById = async (id: number): Promise<Carrera | null> => {
@@ -20,7 +21,7 @@ export const getCarreraById = async (id: number): Promise<Carrera | null> => {
       AND estado_auditoria = 'ACTIVO'
   `;
   const res = await pool.query(query, [id]);
-  return res.rows[0] || null;
+  return res.rows[0] ? mapAuditoria(res.rows[0]) : null;
 };
 
 export const createCarrera = async (data: Partial<Carrera>): Promise<Carrera> => {
@@ -33,7 +34,7 @@ export const createCarrera = async (data: Partial<Carrera>): Promise<Carrera> =>
     data.nombre_carrera,
     data.facultad
   ]);
-  return res.rows[0];
+  return mapAuditoria(res.rows[0]);
 };
 
 export const updateCarrera = async (
@@ -54,7 +55,7 @@ export const updateCarrera = async (
     data.facultad,
     id
   ]);
-  return res.rows[0] || null;
+  return mapAuditoria(res.rows[0]) || null;
 };
 
 export const deleteCarrera = async (id: number): Promise<Carrera | null> => {
@@ -66,5 +67,5 @@ export const deleteCarrera = async (id: number): Promise<Carrera | null> => {
     RETURNING *
   `;
   const res = await pool.query(query, [id]);
-  return res.rows[0] || null;
+  return mapAuditoria(res.rows[0]) || null;
 };

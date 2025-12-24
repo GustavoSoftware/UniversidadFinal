@@ -1,4 +1,5 @@
 import { pool } from "../database"; 
+import { mapAuditoria } from "../utils/mapAuditoria";
 
 const obtenerIdCampo = (tabla: string): string => {
     const mapeo: { [key: string]: string } = {
@@ -18,7 +19,7 @@ const obtenerIdCampo = (tabla: string): string => {
 export const getAll = async (tabla: string) => {
     const query = `SELECT * FROM ${tabla} WHERE estado_auditoria = 'ACTIVO' ORDER BY fecha_creacion DESC`;
     const res = await pool.query(query);
-    return res.rows;
+    return res.rows.map(mapAuditoria);
 };
 
 // 2. Obtener por ID con mapeo automático
@@ -26,7 +27,7 @@ export const getById = async (tabla: string, id: number) => {
     const idCampo = obtenerIdCampo(tabla);
     const query = `SELECT * FROM ${tabla} WHERE ${idCampo} = $1 AND estado_auditoria = 'ACTIVO'`;
     const res = await pool.query(query, [id]);
-    return res.rows[0] || null;
+    return mapAuditoria(res.rows[0]) || null;
 };
 
 // 3. Crear registro
@@ -42,7 +43,7 @@ export const create = async (tabla: string, datos: any) => {
         RETURNING *`;
 
     const res = await pool.query(query, valores);
-    return res.rows[0];
+    return mapAuditoria(res.rows[0]);
 };
 
 // 4. Actualizar registro
@@ -60,7 +61,7 @@ export const update = async (tabla: string, id: number, datos: any) => {
         RETURNING *`;
 
     const res = await pool.query(query, [...valores, id]);
-    return res.rows[0] || null;
+    return mapAuditoria(res.rows[0]) || null;
 };
 
 // 5. Eliminación lógica
@@ -73,5 +74,5 @@ export const deleteLogic = async (tabla: string, id: number) => {
         RETURNING *`;
         
     const res = await pool.query(query, [id]);
-    return res.rows[0] || null;
+    return mapAuditoria(res.rows[0]) || null;
 };
