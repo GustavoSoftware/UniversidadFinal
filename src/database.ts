@@ -5,7 +5,7 @@ import { Pool } from 'pg';
 export const pool = new Pool({
   user: 'postgres',
   host: 'localhost',
-  database: 'UniversidadDB',
-  password: 'tu_password_aqui', // Asegúrate de que esta sea tu clave real
+  database: 'Universidad',
+  password: '123456', // Asegúrate de que esta sea tu clave real
   port: 5432,
 });
