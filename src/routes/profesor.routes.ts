@@ -3,9 +3,6 @@ import * as profesorController from "../controllers/profesor.controller";
 
 const router = Router();
 
-/**
- * CRUD PROFESORES
- */
 router.get("/", profesorController.listarProfesores);
 router.get("/:id", profesorController.obtenerProfesor);
 router.post("/", profesorController.crearProfesor);
