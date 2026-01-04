@@ -54,9 +54,11 @@ export interface Calificacion extends Auditoria {
   puntaje: number;
 }
 export interface Pago extends Auditoria {
-  id_pago: number;
-  tipo_persona: "ALUMNO" | "PROFESOR";
-  id_persona: number;
+  id: number;
+  id_alumno: number;
   monto: number;
   concepto: string;
+  fecha_pago: string;
+  metodo_pago?: string;
 }
+
