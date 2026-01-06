@@ -1,26 +1,30 @@
 import express from "express";
-import universidadRoutes from "./routes/universidad.route";
-import carreraRoutes from './routes/carrera.routes'
+import carreraRoutes from "./routes/carrera.routes";
 import alumnoRoutes from "./routes/alumno.routes";
 import cursoRoutes from "./routes/curso.routes";
 import horarioRoutes from "./routes/horario.routes";
 import alumnoCursoRoutes from "./routes/alumnoCurso.routes";
 import calificacionRoutes from "./routes/calificaciones.routes";
 import pagoRoutes from "./routes/pago.routes";
-
-
+import usuarioRoutes from "./routes/usuario.route";
+import authRoute from "./routes/auth.route";
+import dotenv from "dotenv";
+import { requireAuth } from "./middlewares/auth.middleware";
+dotenv.config();
 
 const app = express();
 app.use(express.json());
+const prefix = "/api/v1";
 
-app.use("/api/v1", universidadRoutes);
-app.use("/api/v1/carreras", carreraRoutes);
-app.use("/api/v1/alumnos", alumnoRoutes);
-app.use("/api/v1/cursos", cursoRoutes);
-app.use("/api/v1/horarios", horarioRoutes);
-app.use("/api/v1/matriculas", alumnoCursoRoutes);
-app.use("/api/v1/calificaciones", calificacionRoutes);
-app.use("/api/v1/pagos", pagoRoutes);
+app.use(`${prefix}/auth`, authRoute);
+app.use(`${prefix}/usuarios`, usuarioRoutes);
+app.use(`${prefix}/carreras`, requireAuth, carreraRoutes);
+app.use(`${prefix}/alumnos`, requireAuth, alumnoRoutes);
+app.use(`${prefix}/cursos`, requireAuth, cursoRoutes);
+app.use(`${prefix}/horarios`, requireAuth, horarioRoutes);
+app.use(`${prefix}/matriculas`, requireAuth, alumnoCursoRoutes);
+app.use(`${prefix}/calificaciones`, requireAuth, calificacionRoutes);
+app.use(`${prefix}/pagos`, requireAuth, pagoRoutes);
 
 app.listen(3000, () => {
   console.log("Servidor de la Universidad corriendo en el puerto 3000");

@@ -36,6 +36,29 @@ export const createCarrera = async (
   return mapAuditoria(res.rows[0]);
 };
 
+// export const createCarrera = async (
+//   data: Partial<Carrera>,
+//   usuarioCreacionId: number
+// ): Promise<Carrera> => {
+//   const query = `
+//     INSERT INTO carreras (
+//       nombre_carrera,
+//       facultad,
+//       usuario_creacion
+//     )
+//     VALUES ($1, $2, $3)
+//     RETURNING *
+//   `;
+
+//   const res = await pool.query(query, [
+//     data.nombre_carrera,
+//     data.facultad,
+//     usuarioCreacionId,
+//   ]);
+
+//   return mapAuditoria(res.rows[0]);
+// };
+
 export const updateCarrera = async (
   id: number,
   data: Partial<Carrera>
