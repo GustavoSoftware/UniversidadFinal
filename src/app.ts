@@ -11,13 +11,21 @@ import usuarioRoutes from "./routes/usuario.route";
 import authRoute from "./routes/auth.route";
 import dotenv from "dotenv";
 import { requireAuth } from "./middlewares/auth.middleware";
+import { swaggerSpec } from "./config/swagger";
+import swaggerUi from "swagger-ui-express";
+
 dotenv.config();
 
 const app = express();
 app.use(express.json());
 const prefix = "/api/v1";
 
+//RUTA SWAGGER
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+//RUTA PUBLICA DE AUTENTICACION
 app.use(`${prefix}/auth`, authRoute);
+
+//RUTAS PROTEGIDAS
 app.use(`${prefix}/usuarios`, usuarioRoutes);
 app.use(`${prefix}/carreras`, requireAuth, carreraRoutes);
 app.use(`${prefix}/alumnos`, requireAuth, alumnoRoutes);
