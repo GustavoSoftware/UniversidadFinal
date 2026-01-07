@@ -1,6 +1,7 @@
 import express from "express";
 import carreraRoutes from "./routes/carrera.routes";
 import alumnoRoutes from "./routes/alumno.routes";
+import profesorRoutes from "./routes/profesor.routes";
 import cursoRoutes from "./routes/curso.routes";
 import horarioRoutes from "./routes/horario.routes";
 import alumnoCursoRoutes from "./routes/alumnoCurso.routes";
@@ -20,6 +21,7 @@ app.use(`${prefix}/auth`, authRoute);
 app.use(`${prefix}/usuarios`, usuarioRoutes);
 app.use(`${prefix}/carreras`, requireAuth, carreraRoutes);
 app.use(`${prefix}/alumnos`, requireAuth, alumnoRoutes);
+app.use(`${prefix}/profesores`, requireAuth, profesorRoutes);
 app.use(`${prefix}/cursos`, requireAuth, cursoRoutes);
 app.use(`${prefix}/horarios`, requireAuth, horarioRoutes);
 app.use(`${prefix}/matriculas`, requireAuth, alumnoCursoRoutes);

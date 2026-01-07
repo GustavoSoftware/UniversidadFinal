@@ -1,5 +1,6 @@
 import { pool } from "../database";
 import { Profesor } from "../models/profesor.model";
+import { mapAuditoria } from "../utils/mapAuditoria";
 
 /**
  * LISTAR PROFESORES ACTIVOS
@@ -12,7 +13,7 @@ export const getAllProfesores = async (): Promise<Profesor[]> => {
     ORDER BY fecha_creacion DESC
   `;
   const res = await pool.query(query);
-  return res.rows;
+  return res.rows.map(mapAuditoria);
 };
 
 /**
@@ -26,7 +27,7 @@ export const getProfesorById = async (id: number): Promise<Profesor | null> => {
       AND estado_auditoria = 'ACTIVO'
   `;
   const res = await pool.query(query, [id]);
-  return res.rows[0] || null;
+  return res.rows[0] ? mapAuditoria(res.rows[0]) : null;
 };
 
 /**
@@ -56,7 +57,7 @@ export const createProfesor = async (
     data.pago_mensual,
     data.id_carrera
   ]);
-  return res.rows[0];
+  return mapAuditoria(res.rows[0]);
 };
 
 /**
@@ -88,7 +89,7 @@ export const updateProfesor = async (
     data.id_carrera,
     id
   ]);
-  return res.rows[0] || null;
+  return res.rows[0] ? mapAuditoria(res.rows[0]) : null;
 };
 
 /**
@@ -104,5 +105,5 @@ export const deleteProfesor = async (id: number): Promise<Profesor | null> => {
     RETURNING *
   `;
   const res = await pool.query(query, [id]);
-  return res.rows[0] || null;
+  return res.rows[0] ? mapAuditoria(res.rows[0]) : null;
 };

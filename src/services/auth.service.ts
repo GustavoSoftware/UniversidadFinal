@@ -25,7 +25,7 @@ export const login = async (username: string, password: string) => {
     throw new Error("Credenciales inválidas");
   }
 
-  const secret = process.env.JWT_SECRET;
+  const secret = env.JWT_SECRET;
 
   if (!secret) {
     throw new Error("JWT_SECRET no definido en variables de entorno");
