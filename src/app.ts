@@ -22,6 +22,7 @@ const prefix = "/api/v1";
 
 //RUTA SWAGGER
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
 //RUTA PUBLICA DE AUTENTICACION
 app.use(`${prefix}/auth`, authRoute);
 
