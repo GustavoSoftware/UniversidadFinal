@@ -43,7 +43,6 @@ const router = Router();
  *       500:
  *         description: Error interno del servidor
  */
-
 router.get("/", carreraController.listarCarreras);
 
 /**
