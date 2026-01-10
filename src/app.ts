@@ -26,8 +26,10 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 //RUTA PUBLICA DE AUTENTICACION
 app.use(`${prefix}/auth`, authRoute);
 
-//RUTAS PROTEGIDAS
+//RUTA PUBLICA REGISTER
 app.use(`${prefix}/usuarios`, usuarioRoutes);
+
+//RUTAS PROTEGIDAS
 app.use(`${prefix}/carreras`, requireAuth, carreraRoutes);
 app.use(`${prefix}/alumnos`, requireAuth, alumnoRoutes);
 app.use(`${prefix}/profesores`, requireAuth, profesorRoutes);
