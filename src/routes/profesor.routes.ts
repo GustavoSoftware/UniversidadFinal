@@ -2,7 +2,7 @@ import { Router } from "express";
 import * as profesorController from "../controllers/profesor.controller";
 import { idSchema } from "../schemas/carrera.schemas";
 import { validate } from "../middlewares/validate.middleware";
-import { updateProfesorSchema } from "../schemas/profesor.schemas";
+import { createProfesorSchema, updateProfesorSchema } from "../schemas/profesor.schemas";
 
 const router = Router();
 
@@ -134,7 +134,7 @@ router.get("/:id",
  */
 
 router.post("/", 
-    validate(idSchema, "body"),
+    validate(createProfesorSchema, "body"),
     profesorController.crearProfesor);
 
 /**

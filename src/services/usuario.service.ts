@@ -51,6 +51,10 @@ export const updateUsuario = async (
   data: Partial<Usuario>,
   usuarioModificacionId: number
 ): Promise<Usuario | null> => {
+  const saltRounds = 10;
+  const hashedPassword = data.password
+    ? await bcrypt.hash(data.password, saltRounds)
+    : data.password;
   const query = `
     UPDATE usuarios
     SET username = $1,
@@ -63,7 +67,7 @@ export const updateUsuario = async (
 
   const res = await pool.query(query, [
     data.username,
-    data.password,
+    hashedPassword,
     usuarioModificacionId,
     id,
   ]);
@@ -91,6 +95,7 @@ export const updateUsuarioPartial = async (
   const fields: string[] = [];
   const values: any[] = [];
   let index = 1;
+  const saltRounds = 10;
 
   if (data.username !== undefined) {
     fields.push(`username = $${index++}`);
@@ -99,7 +104,10 @@ export const updateUsuarioPartial = async (
 
   if (data.password !== undefined) {
     fields.push(`password = $${index++}`);
-    values.push(data.password);
+    // hash password before saving
+    // eslint-disable-next-line no-await-in-loop
+    const hashed = await bcrypt.hash(data.password!, saltRounds);
+    values.push(hashed);
   }
 
   if (data.rol !== undefined) {

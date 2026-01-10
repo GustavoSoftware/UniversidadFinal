@@ -5,7 +5,7 @@ import { mapAuditoria } from "../utils/mapAuditoria";
 export const getAllHorarios = async (): Promise<Horario[]> => {
   const query = `
     SELECT *
-    FROM horarios
+    FROM aulas_horarios
     WHERE estado_auditoria = 'ACTIVO'
     ORDER BY fecha_creacion DESC
   `;
@@ -16,7 +16,7 @@ export const getAllHorarios = async (): Promise<Horario[]> => {
 export const getHorarioById = async (id: number): Promise<Horario | null> => {
   const query = `
     SELECT *
-    FROM horarios
+    FROM aulas_horarios
     WHERE id_horario = $1
       AND estado_auditoria = 'ACTIVO'
   `;
@@ -28,7 +28,7 @@ export const createHorario = async (
   data: Partial<Horario>
 ): Promise<Horario> => {
   const query = `
-    INSERT INTO horarios (id_curso, pabellon, nro_aula, dia_semana, usuario_creacion)
+    INSERT INTO aulas_horarios (id_curso, pabellon, nro_aula, dia_semana, usuario_creacion)
     VALUES ($1, $2, $3, $4, 'admin_user')
     RETURNING *
   `;
@@ -46,7 +46,7 @@ export const updateHorario = async (
   data: Partial<Horario>
 ): Promise<Horario | null> => {
   const query = `
-    UPDATE horarios
+    UPDATE aulas_horarios
     SET id_curso = $1,
         pabellon = $2,
         nro_aula = $3,
@@ -68,7 +68,7 @@ export const updateHorario = async (
 
 export const deleteHorario = async (id: number): Promise<Horario | null> => {
   const query = `
-    UPDATE horarios
+    UPDATE aulas_horarios
     SET estado_auditoria = 'INACTIVO',
         fecha_modificacion = CURRENT_TIMESTAMP
     WHERE id_horario = $1
@@ -109,7 +109,7 @@ export const updateHorarioPartial = async (
   if (fields.length === 0) return null;
 
   const query = `
-    UPDATE horarios
+    UPDATE aulas_horarios
     SET ${fields.join(", ")},
         fecha_modificacion = CURRENT_TIMESTAMP,
         usuario_modificacion = 'admin_user'

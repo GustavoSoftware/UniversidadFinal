@@ -130,7 +130,7 @@ router.post("/", validate(usuarioCreateSchema, "body"), crearUsuario);
  * /api/v1/usuarios/{id}:
  *   put:
  *     tags: [Usuarios]
- *     summary: Atualizar Usuario
+ *     summary: Actualizar Usuario
  *     description: Actualiza un usuario por id
  *     parameters:
  *       - in: path
