@@ -1,1 +1,132 @@
-Hola a todos!
+Universidad - API REST
+========================
+
+Este proyecto es una API REST construida con **Node.js**, **TypeScript**, **Express** y **PostgreSQL** para gestionar información de una universidad:
+
+- Carreras
+- Alumnos
+- Profesores
+- Cursos
+- Horarios
+- Matrículas (alumno-curso)
+- Calificaciones
+- Pagos
+- Usuarios y autenticación
+
+Requisitos
+----------
+
+- Node.js (versión 18+ recomendada)
+- PostgreSQL en ejecución en tu máquina o en un servidor accesible
+
+Instalación
+-----------
+
+1. Clona el repositorio y entra a la carpeta del proyecto.
+2. Instala las dependencias:
+
+   ```bash path=null start=null
+   npm install
+   ```
+
+Configuración
+-------------
+
+### Variables de entorno
+
+El proyecto usa `dotenv` para cargar variables de entorno desde un archivo `.env` en la raíz del proyecto.
+
+Variables relevantes (ver `src/config/env.ts`):
+
+- `JWT_SECRET`: clave usada para firmar/verificar los tokens JWT.
+- `JWT_EXPIRES_IN`: tiempo de expiración del token (por defecto `1h`).
+
+Ejemplo de `.env` mínimo:
+
+```bash path=null start=null
+JWT_SECRET=mi_super_clave_secreta
+JWT_EXPIRES_IN=1h
+```
+
+### Base de datos
+
+- El proyecto usa PostgreSQL, configurado en `src/database.ts` mediante un `Pool` de `pg`.
+- El nombre de la base de datos por defecto es `universidad`.
+- El archivo `UniversidadDB.sql` contiene el script para crear las tablas y datos iniciales. Ejecuta ese archivo en tu servidor PostgreSQL antes de levantar la API.
+
+Si necesitas cambiar usuario, contraseña, host o puerto, actualiza `src/database.ts` según tu entorno.
+
+Comandos principales
+--------------------
+
+Todos los comandos se ejecutan desde la raíz del proyecto.
+
+- **Desarrollo (TypeScript con ts-node)**
+
+  ```bash path=null start=null
+  npm run dev
+  ```
+
+  Levanta el servidor Express en el puerto **3000** usando `src/app.ts`.
+
+- **Compilar a JavaScript**
+
+  ```bash path=null start=null
+  npm run build
+  ```
+
+  Usa `tsc` con la configuración de `tsconfig.json` (salida en la carpeta `dist`).
+
+- **Ejecutar la versión compilada**
+
+  ```bash path=null start=null
+  npm start
+  ```
+
+  Ejecuta `node dist/app.js`.
+
+Endpoints principales
+---------------------
+
+- Prefijo base de la API: `http://localhost:3000/api/v1`
+- Ejemplo de endpoint (público inicialmente):
+  - `GET /api/v1/usuarios` – listar usuarios
+  - `POST /api/v1/usuarios` – registrar usuario
+- Autenticación:
+  - `POST /api/v1/auth/login` – inicio de sesión, retorna un token JWT.
+
+Las rutas protegidas usan el middleware `requireAuth` (ver `src/middlewares/auth.middleware.ts`) y esperan un encabezado:
+
+```text path=null start=null
+Authorization: Bearer <token>
+```
+
+Documentación de la API (Swagger)
+---------------------------------
+
+- Swagger está configurado en `src/config/swagger.ts` usando `swagger-jsdoc` y `swagger-ui-express`.
+- La documentación se genera a partir de comentarios `@openapi` en los archivos de rutas (`src/routes/*.ts`).
+- Una vez levantado el servidor, puedes acceder a la documentación interactiva en:
+
+  ```text path=null start=null
+  http://localhost:3000/api-docs
+  ```
+
+Arquitectura general
+--------------------
+
+Estructura lógica de las capas principales:
+
+- `src/app.ts`: punto de entrada, configura Express, middlewares globales, rutas y Swagger.
+- `src/routes/`: define las rutas por recurso (alumnos, carreras, usuarios, etc.), conecta middlewares y controladores.
+- `src/controllers/`: recibe `Request/Response`, maneja códigos de estado y delega la lógica a los servicios.
+- `src/services/`: contiene la lógica de negocio y el acceso directo a PostgreSQL (`pool.query`).
+- `src/models/`: interfaces TypeScript que representan las entidades del dominio (ej. `Alumno`, `Carrera`, `Pago`, etc.).
+- `src/schemas/`: esquemas de validación con Joi para body/params/query.
+- `src/middlewares/`: middlewares como `requireAuth` y `validate`.
+- `src/shared/` y `src/utils/`: clases y utilidades compartidas (por ejemplo `BaseResponse`, constantes de estado HTTP, formateo de fechas y mapeo de campos de auditoría).
+
+Estado de pruebas
+-----------------
+
+Actualmente no hay un script de pruebas definido en `package.json` ni archivos de prueba en `src/`. Si agregas un framework de pruebas (por ejemplo Jest o Vitest), recuerda definir el script `test` en `package.json` y ubicar los archivos de prueba dentro de `src/` o en una carpeta dedicada como `tests/`.

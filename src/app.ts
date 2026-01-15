@@ -1,4 +1,5 @@
 import express from "express";
+import "dotenv/config";
 import carreraRoutes from "./routes/carrera.routes";
 import alumnoRoutes from "./routes/alumno.routes";
 import profesorRoutes from "./routes/profesor.routes";
@@ -9,12 +10,11 @@ import calificacionRoutes from "./routes/calificaciones.routes";
 import pagoRoutes from "./routes/pago.routes";
 import usuarioRoutes from "./routes/usuario.route";
 import authRoute from "./routes/auth.route";
-import dotenv from "dotenv";
 import { requireAuth } from "./middlewares/auth.middleware";
 import { swaggerSpec } from "./config/swagger";
 import swaggerUi from "swagger-ui-express";
 
-dotenv.config();
+//dotenv.configDotenv();
 
 const app = express();
 app.use(express.json());
